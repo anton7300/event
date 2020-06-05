@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\Interest;
+use App\InterestCat;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,9 +53,31 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
+            'nickname' => ['required', 'string', 'max:30', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:255'],
+            'age' => ['required', 'date_format:d.m.Y', 'before:today'],
+            'gender' => ['required', 'integer', 'between:1,2'],
+            'location' => ['nullable', 'string'],
+            'interest_id' => ['nullable', 'array']
+        ]);
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        $interestCats = InterestCat::get(['id', 'name']);
+        $interests = Interest::get(['id', 'name', 'cat_id']);
+
+        return view('auth.register', [
+            'interests' => $interests,
+            'interestCats' => $interestCats
         ]);
     }
 
@@ -64,9 +89,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if (!empty($data['interest_id'])) {
+            $user->interests()->detach();
+
+            foreach($data['interest_id'] as $item)
+                $user->interests()->attach($item);
+        }
+
+        $data['age'] = date("Y-m-d", strtotime($data['age']));
+
         return User::create([
+            'nickname' => $data['nickname'],
             'name' => $data['name'],
             'email' => $data['email'],
+            'phone' => $data['phone'],
+            'age' => $data['age'],
+            'gender' => $data['gender'],
+            'location' => $data['location'],
             'password' => Hash::make($data['password']),
         ]);
     }

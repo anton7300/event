@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Interest;
 use App\InterestCat;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,11 @@ class InterestCatController extends Controller
      */
     public function index()
     {
-        //
+        $interestCats = InterestCat::get();
+
+        return view('admin.interestCat.index', [
+            'interestCats' => $interestCats
+        ]);
     }
 
     /**
@@ -24,7 +29,7 @@ class InterestCatController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.interestCat.create');
     }
 
     /**
@@ -35,7 +40,15 @@ class InterestCatController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string']
+        ]);
+
+        $data = $request->all();
+
+        InterestCat::create($data);
+
+        return redirect()->route('interest-cat.index');
     }
 
     /**
@@ -46,7 +59,7 @@ class InterestCatController extends Controller
      */
     public function show(InterestCat $interestCat)
     {
-        //
+        return redirect( route('interest-cat.index') );
     }
 
     /**
@@ -57,7 +70,9 @@ class InterestCatController extends Controller
      */
     public function edit(InterestCat $interestCat)
     {
-        //
+        return view('admin.interestCat.edit', [
+            'interestCat' => $interestCat
+        ]);
     }
 
     /**
@@ -69,7 +84,15 @@ class InterestCatController extends Controller
      */
     public function update(Request $request, InterestCat $interestCat)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string']
+        ]);
+
+        $data = $request->all();
+
+        $interestCat->update($data);
+
+        return redirect()->route('interest-cat.index');
     }
 
     /**
@@ -80,6 +103,8 @@ class InterestCatController extends Controller
      */
     public function destroy(InterestCat $interestCat)
     {
-        //
+        $interestCat->delete();
+
+        return redirect()->route('interest-cat.index');
     }
 }

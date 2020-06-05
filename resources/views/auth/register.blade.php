@@ -11,55 +11,70 @@
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
 
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+                        <input name="nickname" value="{{ old('nickname') }}" placeholder="nickname require" required>
+                        @error('nickname')
+                        {{ $message }}
+                        @enderror
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                        <input name="name" value="{{ old('name') }}" placeholder="name require">
+                        @error('name')
+                        {{ $message }}
+                        @enderror
 
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+                        <input name="email" value="{{ old('email') }}" placeholder="email require" required>
+                        @error('email')
+                        {{ $message }}
+                        @enderror
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                        <input name="phone" value="{{ old('phone') }}" placeholder="phone require" required>
+                        @error('phone')
+                        {{ $message }}
+                        @enderror
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                        <input name="age" value="{{ old('age') }}" placeholder="age" required>
+                        @error('age')
+                        {{ $message }}
+                        @enderror
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+                        <select name="gender" value="{{ old('gender') }}">
+                            <option @if (empty(old('gender'))) selected @endif value="">{{ __('Select') }}</option>
+                            <option value="1"  @if (old('gender') == 1) selected @endif>{{ __('Men') }}</option>
+                            <option value="2"  @if (old('gender') == 2) selected @endif>{{ __('Women') }}</option>
+                        </select>
+                        @error('gender')
+                        {{ $message }}
+                        @enderror
 
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                        <input name="location" value="{{ old('location') }}" placeholder="location">
+                        @error('location')
+                        {{ $message }}
+                        @enderror
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                        <select name="interest_id[]" multiple>
+                            <option @if (empty(old('interest_id')))) selected @endif value="">{{ __('Select') }}</option>
+                            @foreach ($interestCats as $itemCat)
+                                <option disabled data-cat="{{ $itemCat->id }}">{{ $itemCat->name }}</option>
+                                @foreach ($interests as $item)
+                                    @if ($item->cat_id == $itemCat->id)
+                                        <option value="{{ $item->id }}"
+                                                @if (gettype(old('interest_id')) === 'array' && in_array($item->id, old('interest_id')))
+                                                selected
+                                                @endif
+                                        >{{ $item->name }}</option>
+                                    @endif
+                                @endforeach
+                            @endforeach
+                        </select>
+                        @error('interest_id')
+                        {{ $message }}
+                        @enderror
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+                        <input type="password" name="password" placeholder="password" required>
+                        @error('password')
+                        {{ $message }}
+                        @enderror
 
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
+                        <input type="password" name="password_confirmation" placeholder="password confirmation" required>
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">

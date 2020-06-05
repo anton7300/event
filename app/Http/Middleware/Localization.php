@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use App\User;
+use Session;
+use Config;
 
 class Localization
 {
@@ -16,12 +18,15 @@ class Localization
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->user()) {
+        if (auth()->check()) {
             $user_id = auth()->user()->id;
             $locale = User::where('id', $user_id)->select('locale')->first()->toArray();
 
-            if ( !empty($locale['locale']) )
-                app()->setLocale($locale['locale']);
+            app()->setLocale($locale['locale']);
+        } else {
+            $locale=Session::get('locale', Config::get('app.locale'));
+
+            app()->setLocale($locale);
         }
 
         return $next($request);

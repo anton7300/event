@@ -19,8 +19,10 @@ class CreateEventsTable extends Migration
             $table->datetime('date');
             $table->string('location');
             $table->string('logo')->nullable();
+            $table->string('description_short')->nullable();
             $table->string('description')->nullable();
-            $table->date('age')->nullable();
+            $table->date('age_from')->nullable();
+            $table->date('age_to')->nullable();
             $table->tinyInteger('gender')->nullable();
             $table->integer('count_users')->nullable();
 
@@ -28,8 +30,8 @@ class CreateEventsTable extends Migration
             $table->foreign('interest_id')->references('id')->on('interests')->onDelete('set null');
 
             $table->tinyInteger('type');
-            $table->integer('like')->default(0);
-            $table->tinyInteger('is_active');
+            $table->integer('views')->default(0);
+            $table->tinyInteger('is_active')->default(1);
 
             $table->bigInteger('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');

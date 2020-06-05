@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Interest;
+use App\InterestCat;
 use Illuminate\Http\Request;
 
 class InterestController extends Controller
@@ -14,7 +15,11 @@ class InterestController extends Controller
      */
     public function index()
     {
-        //
+        $interests = Interest::get();
+
+        return view('admin.interest.index', [
+            'interests' => $interests
+        ]);
     }
 
     /**
@@ -24,7 +29,11 @@ class InterestController extends Controller
      */
     public function create()
     {
-        //
+        $interestCats = InterestCat::get(['id', 'name']);
+
+        return view('admin.interest.create', [
+            'interestCats' => $interestCats
+        ]);
     }
 
     /**
@@ -35,7 +44,16 @@ class InterestController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string'],
+            'cat_id' => ['nullable', 'exists:interest_cats,id']
+        ]);
+
+        $data = $request->all();
+
+        Interest::create($data);
+
+        return redirect()->route('interest.index');
     }
 
     /**
@@ -46,7 +64,7 @@ class InterestController extends Controller
      */
     public function show(Interest $interest)
     {
-        //
+        return redirect( route('interest.index') );
     }
 
     /**
@@ -57,7 +75,12 @@ class InterestController extends Controller
      */
     public function edit(Interest $interest)
     {
-        //
+        $interestCats = InterestCat::get(['id', 'name']);
+
+        return view('admin.interest.edit', [
+            'interest' => $interest,
+            'interestCats' => $interestCats
+        ]);
     }
 
     /**
@@ -69,7 +92,16 @@ class InterestController extends Controller
      */
     public function update(Request $request, Interest $interest)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'string'],
+            'cat_id' => ['nullable', 'exists:interest_cats,id']
+        ]);
+
+        $data = $request->all();
+
+        $interest->update($data);
+
+        return redirect()->route('interest.index');
     }
 
     /**
@@ -80,6 +112,8 @@ class InterestController extends Controller
      */
     public function destroy(Interest $interest)
     {
-        //
+        $interest->delete();
+
+        return redirect()->route('interest.index');
     }
 }

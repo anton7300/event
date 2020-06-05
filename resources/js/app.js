@@ -1,4 +1,4 @@
-/**
+ /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
@@ -21,6 +21,20 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
+Vue.component('dialog-user', require('./components/DialogUser.vue').default);
+Vue.component('dialog-message', require('./components/DialogMessage.vue').default);
+Vue.component('dialog-log', require('./components/DialogLog.vue').default);
+Vue.component('dialog-composer', require('./components/DialogComposer.vue').default);
+
+Vue.component('chat-event', require('./components/ChatEvent.vue').default);
+Vue.component('chat-message', require('./components/ChatMessage.vue').default);
+Vue.component('chat-log', require('./components/ChatLog.vue').default);
+Vue.component('chat-composer', require('./components/ChatComposer.vue').default);
+
+// Vue.component('passport-clients', require('./components/passport/Clients.vue').default);
+// Vue.component('passport-authorized-clients', require('./components/passport/AuthorizedClients.vue').default);
+// Vue.component('passport-personal-access-tokens', require('./components/passport/PersonalAccessTokens.vue').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -28,5 +42,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  */
 
 const app = new Vue({
-    el: '#app',
+    el: '#app'
 });
