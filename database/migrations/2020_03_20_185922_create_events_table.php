@@ -25,6 +25,8 @@ class CreateEventsTable extends Migration
             $table->date('age_to')->nullable();
             $table->tinyInteger('gender')->nullable();
             $table->integer('count_users')->nullable();
+            $table->string('price')->nullable();
+            $table->string('weather')->nullable();
 
             $table->bigInteger('interest_id')->unsigned()->nullable();
             $table->foreign('interest_id')->references('id')->on('interests')->onDelete('set null');
@@ -36,6 +38,7 @@ class CreateEventsTable extends Migration
             $table->bigInteger('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
 
+            $table->integer('count_likes')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
