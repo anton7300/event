@@ -89,6 +89,29 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $data['age'] = date("Y-m-d", strtotime($data['age']));
+
+        $user = User::create([
+            'nickname' => $data['nickname'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
+
+        $user->profile()->create([
+            'name' => $data['name'],
+            'age' => $data['age'],
+            'gender' => $data['gender'],
+            'location' => $data['location'],
+        ]);
+
+        $user->phones()->create([
+            'phone' => $data['phone'],
+        ]);
+
+        $user->emails()->create([
+            'email' => $data['email'],
+        ]);
+
         if (!empty($data['interest_id'])) {
             $user->interests()->detach();
 
@@ -96,17 +119,6 @@ class RegisterController extends Controller
                 $user->interests()->attach($item);
         }
 
-        $data['age'] = date("Y-m-d", strtotime($data['age']));
-
-        return User::create([
-            'nickname' => $data['nickname'],
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-            'age' => $data['age'],
-            'gender' => $data['gender'],
-            'location' => $data['location'],
-            'password' => Hash::make($data['password']),
-        ]);
+        return $user;
     }
 }

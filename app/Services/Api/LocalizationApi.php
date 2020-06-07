@@ -2,7 +2,6 @@
 
 namespace App\Services\Api;
 
-use App\User;
 use Session;
 
 class LocalizationApi
@@ -11,8 +10,10 @@ class LocalizationApi
     {
         app()->setLocale($locale);
 
-        if (auth()->check())
-            User::where('id', auth()->user()->id)->update(['locale' => $locale]);
+        if (auth()->check()) {
+            $user = auth()->user();
+            $user->profile()->update(['locale' => $locale]);
+        }
 
         Session::put('locale', $locale);
 
