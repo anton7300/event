@@ -20,7 +20,7 @@ class Event extends Model
 
     public function subscribers()
     {
-        return $this->belongsToMany('App\User');
+        return $this->belongsToMany('App\User', 'event_subscribers');
     }
 
     public function likes()
@@ -33,8 +33,8 @@ class Event extends Model
         return $this->hasOne(Chat::class);
     }
 
-    public function user()
+    public function tags ()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(Tag::class);
     }
 }

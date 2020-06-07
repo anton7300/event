@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEventUserTable extends Migration
+class CreateEventSubscribersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateEventUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('event_user', function(Blueprint $table)
+        Schema::create('event_subscribers', function(Blueprint $table)
         {
             $table->id();
 
@@ -34,6 +34,6 @@ class CreateEventUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('event_user');
+        Schema::dropIfExists('event_subscribers');
     }
 }
