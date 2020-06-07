@@ -36,6 +36,7 @@ class CreateEventsTable extends Migration
             $table->bigInteger('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }
