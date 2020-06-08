@@ -132,7 +132,7 @@ class EventApi
      * Display the specified resource.
      *
      * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function show(Event $event)
     {
@@ -174,7 +174,7 @@ class EventApi
      * Show the form for editing the specified resource.
      *
      * @param  \App\Event  $event
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function edit(Event $event)
     {
@@ -187,11 +187,11 @@ class EventApi
         $interestCats = InterestCat::get(['id', 'name']);
         $interests = Interest::get(['id', 'name', 'cat_id']);
 
-        return view('event.edit', [
+        return [
             'event' => $event,
             'interests' => $interests,
             'interestCats' => $interestCats
-        ]);
+        ];
     }
 
     /**
