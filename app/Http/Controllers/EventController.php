@@ -41,39 +41,9 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string'],
-            'date' => ['required', 'date_format:d.m.Y H:i', 'after_or_equal:today'],
-            'location' => ['required', 'string'],
-            'logo' => ['nullable', 'image', 'mimes:jpeg,png'],
-            'description' => ['nullable', 'string'],
-            'age_from' => ['nullable', 'integer', 'between:1,120', 'lte:age_to'],
-            'age_to' => ['nullable', 'integer', 'between:1,120', 'gte:age_from'],
-            'gender' => ['nullable', 'integer', 'between:1,2'],
-            'count_users' => ['nullable', 'integer', 'min:1'],
-            'interest_id' => ['nullable', 'integer', 'exists:interests,id'],
-            'type' => ['required', 'integer', 'between:1,2']
-        ]);
+        $data = (new EventApi)->store($request);
 
-        $data = $request->all();
-
-        $data['date'] = date("Y-m-d H:i:s", strtotime($data['date']));
-        $data['age_from'] = date("Y-m-d", strtotime("-{$data['age_from']} years"));
-        $data['age_to'] = date("Y-m-d", strtotime("-{$data['age_to']} years"));
-        $data['created_by'] = auth()->user()->id;
-
-        if (isset($data['logo'])) {
-            $eventLast = Event::orderBy('id', 'desc')->select('id')->first();
-            $lastID = $eventLast ? $eventLast['id'] + 1 : 1;
-
-            $data['logo'] = $request->file('logo')->storeAs(
-                'public/img/event', "{$lastID}.jpg"
-            );
-        }
-
-        Event::create($data);
-
-        return redirect()->route('user.my-event');
+        return $data;
     }
 
     /**
