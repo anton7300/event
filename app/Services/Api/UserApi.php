@@ -10,8 +10,16 @@ use App\InterestCat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Class UserApi
+ * @package App\Services\Api
+ */
 class UserApi
 {
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function index (Request $request)
     {
         $request->validate([
@@ -67,6 +75,10 @@ class UserApi
         ];
     }
 
+    /**
+     * @param User $user
+     * @return array
+     */
     public function show (User $user)
     {
         $userAuth = auth()->check() ? auth()->user()->id : null;
@@ -97,6 +109,10 @@ class UserApi
         return $return;
     }
 
+    /**
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function subscribe(User $user)
     {
         $userId = auth()->user()->id;
@@ -110,24 +126,33 @@ class UserApi
         return back();
     }
 
+    /**
+     * @return array
+     */
     public function myEvent ()
     {
         $events = Event::where('created_by', auth()->user()->id)->get();
 
-        return view('user.my-event', [
+        return [
             'events' => $events
-        ]);
+        ];
     }
 
+    /**
+     * @return array
+     */
     public function myParticipate ()
     {
         $events = auth()->user()->events()->get();
 
-        return view('user.my-participate', [
+        return [
             'events' => $events
-        ]);
+        ];
     }
 
+    /**
+     * @return array
+     */
     public function personal ()
     {
         $user = auth()->user();
@@ -139,13 +164,17 @@ class UserApi
         $interestCats = InterestCat::get(['id', 'name']);
         $interests = Interest::get(['id', 'name', 'cat_id']);
 
-        return view('user.personal', [
+        return [
             'user' => $user,
             'interests' => $interests,
             'interestCats' => $interestCats
-        ]);
+        ];
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request)
     {
         $user = auth()->user();
@@ -193,21 +222,27 @@ class UserApi
         return redirect()->route('user.personal');
     }
 
+    /**
+     * @return array
+     */
     public function subscribers ()
     {
         $subscribers = auth()->user()->subscribers()->get();
 
-        return view('user.subscribers', [
+        return [
             'subscribers' => $subscribers
-        ]);
+        ];
     }
 
+    /**
+     * @return array
+     */
     public function subscriptions ()
     {
         $subscriptions = auth()->user()->subscriptions()->get();
 
-        return view('user.subscriptions', [
+        return [
             'subscriptions' => $subscriptions
-        ]);
+        ];
     }
 }

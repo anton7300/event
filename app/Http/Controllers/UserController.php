@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index (Request $request)
     {
         $data = (new UserApi)->index($request);
@@ -21,6 +25,10 @@ class UserController extends Controller
         return view('user.index', $data);
     }
 
+    /**
+     * @param User $user
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show (User $user)
     {
         $data = (new UserApi)->show($user);
@@ -28,117 +36,75 @@ class UserController extends Controller
         return view('user.show', $data);
     }
 
+    /**
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function subscribe(User $user)
     {
-        $userId = auth()->user()->id;
+        $data = (new UserApi)->subscribe($user);
 
-        if (!$user->subscribers($userId)->count()) {
-            $user->subscribers()->attach($userId);
-        } else {
-            $user->subscribers()->detach($userId);
-        }
-
-        return back();
+        return $data;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function myEvent ()
     {
-        $events = Event::where('created_by', auth()->user()->id)->get();
+        $data = (new UserApi)->myEvent();
 
-        return view('user.my-event', [
-            'events' => $events
-        ]);
+        return view('user.my-event', $data);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function myParticipate ()
     {
-        $events = auth()->user()->events()->get();
+        $data = (new UserApi)->myParticipate();
 
-        return view('user.my-participate', [
-            'events' => $events
-        ]);
+        return view('user.my-participate', $data);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function personal ()
     {
-        $user = auth()->user();
+        $data = (new UserApi)->personal();
 
-        $user->age = date("d.m.Y", strtotime($user->age));
-
-        $user->interest_id = $user->interests()->get()->pluck('id')->toArray();
-
-        $interestCats = InterestCat::get(['id', 'name']);
-        $interests = Interest::get(['id', 'name', 'cat_id']);
-
-        return view('user.personal', [
-            'user' => $user,
-            'interests' => $interests,
-            'interestCats' => $interestCats
-        ]);
+        return view('user.personal', $data);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request)
     {
-        $user = auth()->user();
+        $data = (new UserApi)->update($request);
 
-        $validArr = [
-            'name' => ['nullable', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-            'phone' => ['required', 'string', 'max:255'],
-            'logo' => ['nullable', 'image', 'mimes:jpeg,png'],
-            'age' => ['required', 'date_format:d.m.Y', 'before:today'],
-            'gender' => ['required', 'integer', 'between:1,2'],
-            'location' => ['nullable', 'string'],
-            'interest_id' => ['nullable', 'array']
-        ];
-
-        if ($user->email != $request->email)
-            $validArr['email'][] = 'unique:users';
-
-        $request->validate($validArr);
-
-        $data = $request->all();
-
-        if (empty($data['password']))
-            unset($data['password'], $data['password_confirmation']);
-        else
-            $data['password'] = Hash::make($data['password']);
-
-        if (!empty($data['logo']))
-        $data['logo'] = $request->file('logo')->storeAs(
-            'public/img/user', "{$user->id}.jpg"
-        );
-
-        $data['age'] = date("Y-m-d", strtotime($data['age']));
-
-        if (!empty($data['interest_id'])) {
-            $user->interests()->detach();
-
-            foreach($data['interest_id'] as $item)
-                $user->interests()->attach($item);
-        }
-
-        $user->update($data);
-
-        return redirect()->route('user.personal');
+        return $data;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function subscribers ()
     {
-        $subscribers = auth()->user()->subscribers()->get();
+        $data = (new UserApi)->subscribers();
 
-        return view('user.subscribers', [
-            'subscribers' => $subscribers
-        ]);
+        return view('user.subscribers', $data);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function subscriptions ()
     {
-        $subscriptions = auth()->user()->subscriptions()->get();
+        $data = (new UserApi)->subscribers();
 
-        return view('user.subscriptions', [
-            'subscriptions' => $subscriptions
-        ]);
+        return view('user.subscriptions', $data);
     }
 }

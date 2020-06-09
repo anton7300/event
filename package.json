@@ -24,7 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "ioredis": "^4.17.1",
+        "ioredis": "^4.17.3",
         "laravel-echo": "^1.8.0",
         "laravel-echo-server": "^1.6.2",
         "socket.io-client": "^2.3.0"

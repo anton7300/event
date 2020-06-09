@@ -41,39 +41,9 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string'],
-            'date' => ['required', 'date_format:d.m.Y H:i', 'after_or_equal:today'],
-            'location' => ['required', 'string'],
-            'logo' => ['nullable', 'image', 'mimes:jpeg,png'],
-            'description' => ['nullable', 'string'],
-            'age_from' => ['nullable', 'integer', 'between:1,120', 'lte:age_to'],
-            'age_to' => ['nullable', 'integer', 'between:1,120', 'gte:age_from'],
-            'gender' => ['nullable', 'integer', 'between:1,2'],
-            'count_users' => ['nullable', 'integer', 'min:1'],
-            'interest_id' => ['nullable', 'integer', 'exists:interests,id'],
-            'type' => ['required', 'integer', 'between:1,2']
-        ]);
+        $data = (new EventApi)->store($request);
 
-        $data = $request->all();
-
-        $data['date'] = date("Y-m-d H:i:s", strtotime($data['date']));
-        $data['age_from'] = date("Y-m-d", strtotime("-{$data['age_from']} years"));
-        $data['age_to'] = date("Y-m-d", strtotime("-{$data['age_to']} years"));
-        $data['created_by'] = auth()->user()->id;
-
-        if (isset($data['logo'])) {
-            $eventLast = Event::orderBy('id', 'desc')->select('id')->first();
-            $lastID = $eventLast ? $eventLast['id'] + 1 : 1;
-
-            $data['logo'] = $request->file('logo')->storeAs(
-                'public/img/event', "{$lastID}.jpg"
-            );
-        }
-
-        Event::create($data);
-
-        return redirect()->route('user.my-event');
+        return $data;
     }
 
     /**
@@ -97,20 +67,9 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        $now = date("Y-m-d");
+        $data = (new EventApi)->edit($event);
 
-        $event->date = date("d.m.Y H:i", strtotime($event->date));
-        $event->age_from = date_diff( date_create($now), date_create($event->age_from) )->format('%Y');
-        $event->age_to = date_diff( date_create($now), date_create($event->age_to) )->format('%Y');
-
-        $interestCats = InterestCat::get(['id', 'name']);
-        $interests = Interest::get(['id', 'name', 'cat_id']);
-
-        return view('event.edit', [
-            'event' => $event,
-            'interests' => $interests,
-            'interestCats' => $interestCats
-        ]);
+        return view('event.edit', $data);
     }
 
     /**
@@ -122,34 +81,9 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
-        $request->validate([
-            'name' => ['required', 'string'],
-            'date' => ['required', 'date_format:d.m.Y H:i', 'after_or_equal:today'],
-            'location' => ['required', 'string'],
-            'logo' => ['nullable', 'image', 'mimes:jpeg,png'],
-            'description' => ['nullable', 'string'],
-            'age_from' => ['nullable', 'integer', 'between:1,120', 'lte:age_to'],
-            'age_to' => ['nullable', 'integer', 'between:1,120', 'gte:age_from'],
-            'gender' => ['nullable', 'integer', 'between:1,2'],
-            'count_users' => ['nullable', 'integer', 'min:1'],
-            'interest_id' => ['nullable', 'integer', 'exists:interests,id'],
-            'type' => ['required', 'integer', 'between:1,2'],
-            'is_active' => ['required', 'integer', 'between:0,1']
-        ]);
+        $data = (new EventApi)->update($request, $event);
 
-        $data = $request->all();
-
-        $data['logo'] = $request->file('logo')->storeAs(
-            'public/img/event', "{$event->id}.jpg"
-        );
-
-        $data['date'] = date("Y-m-d H:i:s", strtotime($data['date']));
-        $data['age_from'] = date("Y-m-d", strtotime("-{$data['age_from']} years"));
-        $data['age_to'] = date("Y-m-d", strtotime("-{$data['age_to']} years"));
-
-        $event->update($data);
-
-        return redirect()->route('user.my-event');
+        return $data;
     }
 
     /**
@@ -160,9 +94,9 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        $event->delete();
+        $data = (new EventApi)->destroy($event);
 
-        return redirect()->route('user.my-event');
+        return $data;
     }
 
     /**
@@ -171,14 +105,8 @@ class EventController extends Controller
      */
     public function subscribe(Event $event)
     {
-        $userId = auth()->user()->id;
+        $data = (new EventApi)->subscribe($event);
 
-        if (!$event->subscribers($userId)->count()) {
-            $event->subscribers()->attach($userId);
-        } else {
-            $event->subscribers()->detach($userId);
-        }
-
-        return back();
+        return $data;
     }
 }
