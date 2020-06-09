@@ -1,5 +1,5 @@
-<h2>Start project</h2>
-<h2>1. redis-server</h3>
+<h1>Start project</h2>
+<h3>1. redis-server</h3>
 <h6>
     если порт занят:<br>
      - <b>ps aux | grep redis</b> (ищем порт на котором работает redis)<br>
