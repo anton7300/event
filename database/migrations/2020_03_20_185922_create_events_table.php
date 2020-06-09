@@ -26,7 +26,6 @@ class CreateEventsTable extends Migration
             $table->tinyInteger('gender')->nullable();
             $table->integer('count_users')->nullable();
             $table->string('price')->nullable();
-            $table->string('weather')->nullable();
 
             $table->bigInteger('interest_id')->unsigned()->nullable();
             $table->foreign('interest_id')->references('id')->on('interests')->onDelete('set null');
