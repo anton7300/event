@@ -146,11 +146,15 @@ class EventApi
             $query->where('user_subscriber_id', $userAuth);
         }])->first();
 
+        $tags = $event->tags();
+
         $return = [
+            'user' => auth()->user()->profile(),
             'event' => $event,
             'creator' => $creator,
             'likes' => $likes,
-            'eventSubscribers' => $eventSubscribers
+            'eventSubscribers' => $eventSubscribers,
+            'tags' => $tags
         ];
 
         if ($userAuth) {
