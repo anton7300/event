@@ -7,7 +7,7 @@ use App\Event;
 use App\Interest;
 use App\InterestCat;
 
-class Main
+class MainApi
 {
     public function index()
     {
@@ -51,7 +51,8 @@ class Main
             'eventsPopular' => $eventsPopular,
             'eventsSubscribe' => $eventsSubscribe,
             'interests' => $interests,
-            'interestCats' => $interestCats
+            'interestCats' => $interestCats,
+            'user' => auth()->user()->profile()
         ];
     }
 }

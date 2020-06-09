@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\Api\Main;
+use App\Services\Api\MainApi;
 
 class IndexController extends Controller
 {
     public function index()
     {
-        $data = (new Main)->index();
+        $data = (new MainApi)->index();
 
         return view('index', $data);
     }
