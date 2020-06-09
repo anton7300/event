@@ -1,4 +1,4 @@
-Start project
+<h2>Start project</h2>
 - <h4>redis-server</h4> 
     если порт занят:
      - <b>ps aux | grep redis</b> (ищем порт на котором работает redis)
@@ -9,3 +9,4 @@ Start project
     - <b>kill -9 <номер порта></b> (убиваем)
 - <h4>php artisan queue:work</h4>
 - <h4>npm run watch-poll</h4>
+<hr>
