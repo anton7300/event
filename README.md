@@ -1,4 +1,4 @@
-<h1>Start project</h2>
+<h1>Запуск проекта</h1>
 <h3>1. redis-server</h3>
 <h6>
     если порт занят:<br>
@@ -13,4 +13,9 @@
 </h6>
 <h3>3. php artisan queue:work</h3>
 <h3>4. npm run watch-poll</h3>
+<hr>
+
+<h1>Загрузка начальных данных</h1>
+<h3>1. composer dump-autoload</h3>
+<h3>2. php artisan db:seed</h3>
 <hr>
