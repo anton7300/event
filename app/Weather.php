@@ -15,8 +15,8 @@ class Weather extends Model
         return $this->belongsTo(Region::class);
     }
 
-    public function events ()
+    public function event ()
     {
-        return $this->hasMany(Event::class);
+        return $this->belongsTo(Event::class);
     }
 }

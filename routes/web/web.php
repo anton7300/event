@@ -25,3 +25,6 @@ Route::get('/user', 'UserController@index')->name('user.index');
 Route::get('/user/{user}', 'UserController@show')->name('user.show');
 
 Route::get('/locale/{locale}', 'LocalizationController@index')->name('locale.set');
+
+
+Route::get('/weather', 'WeatherController@index');

@@ -15,6 +15,10 @@ class CreateEventsTable extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+
+            $table->bigInteger('region_id')->unsigned()->nullable();
+            $table->foreign('region_id')->references('id')->on('regions')->onDelete('set null');
+
             $table->string('name');
             $table->datetime('date');
             $table->string('location');
