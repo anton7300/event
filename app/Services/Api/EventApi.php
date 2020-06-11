@@ -6,6 +6,7 @@ use App\Event;
 use App\Chat;
 use App\Interest;
 use App\InterestCat;
+use App\Http\Controllers\RegionController;
 use Illuminate\Http\Request;
 
 class EventApi
@@ -95,9 +96,12 @@ class EventApi
     {
         $request->validate([
             'name' => ['required', 'string'],
+            'country' => ['required', 'string'],
+            'region' => ['required', 'string'],
             'date' => ['required', 'date_format:d.m.Y H:i', 'after_or_equal:today'],
             'location' => ['required', 'string'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png'],
+            'description_short' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'age_from' => ['nullable', 'integer', 'between:1,120', 'lte:age_to'],
             'age_to' => ['nullable', 'integer', 'between:1,120', 'gte:age_from'],
@@ -123,7 +127,16 @@ class EventApi
             );
         }
 
-        Event::create($data);
+        $region = (new RegionController())->get($data['country'], $data['region']);
+
+        $data['region_id'] = $region['id'];
+
+        $event = Event::create($data);
+
+
+//        $event->region_id = $region['id'];
+//        $region->event()->associate($event);
+//        $event->region()->associate($region);
 
         return redirect()->route('user.my-event');
     }
@@ -209,9 +222,12 @@ class EventApi
     {
         $request->validate([
             'name' => ['required', 'string'],
+            'country' => ['required', 'string'],
+            'region' => ['required', 'string'],
             'date' => ['required', 'date_format:d.m.Y H:i', 'after_or_equal:today'],
             'location' => ['required', 'string'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png'],
+            'description_short' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'age_from' => ['nullable', 'integer', 'between:1,120', 'lte:age_to'],
             'age_to' => ['nullable', 'integer', 'between:1,120', 'gte:age_from'],

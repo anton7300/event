@@ -10,7 +10,7 @@ use App\Weather;
 
 class WeatherController extends Controller
 {
-    public function index (Event $event)
+    public function get (Event $event)
     {
         $region = $event->region()->first();
 

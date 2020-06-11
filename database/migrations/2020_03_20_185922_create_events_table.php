@@ -16,6 +16,12 @@ class CreateEventsTable extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
 
+            $table->bigInteger('created_by')->unsigned();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+
+            $table->bigInteger('interest_id')->unsigned()->nullable();
+            $table->foreign('interest_id')->references('id')->on('interests')->onDelete('set null');
+
             $table->bigInteger('region_id')->unsigned()->nullable();
             $table->foreign('region_id')->references('id')->on('regions')->onDelete('set null');
 
@@ -30,17 +36,9 @@ class CreateEventsTable extends Migration
             $table->tinyInteger('gender')->nullable();
             $table->integer('count_users')->nullable();
             $table->string('price')->nullable();
-
-            $table->bigInteger('interest_id')->unsigned()->nullable();
-            $table->foreign('interest_id')->references('id')->on('interests')->onDelete('set null');
-
             $table->tinyInteger('type');
             $table->integer('views')->default(0);
             $table->tinyInteger('is_active')->default(1);
-
-            $table->bigInteger('created_by')->unsigned();
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-
             $table->integer('count_likes')->nullable();
             $table->softDeletes();
             $table->timestamps();

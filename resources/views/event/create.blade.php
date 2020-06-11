@@ -25,8 +25,23 @@
                     {{ $message }}
                     @enderror
 
+                    <input name="region" value="{{ old('region') }}" placeholder="region require" require>
+                    @error('region')
+                    {{ $message }}
+                    @enderror
+
+                    <input name="country" value="{{ old('country') }}" placeholder="country iso require" require>
+                    @error('country')
+                    {{ $message }}
+                    @enderror
+
                     <input type="file" accept="image/jpeg,image/png" name="logo" value="{{ old('logo') }}">
                     @error('logo')
+                    {{ $message }}
+                    @enderror
+
+                    <input name="description_short" value="{{ old('description_short') }}" placeholder="description_short">
+                    @error('description_short')
                     {{ $message }}
                     @enderror
 
