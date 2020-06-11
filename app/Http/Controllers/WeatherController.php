@@ -12,52 +12,50 @@ class WeatherController extends Controller
 {
     public function index (Event $event)
     {
-        $event = Event::find(1);
-
         $region = $event->region()->first();
 
         $weather = $event->weather()->first();
 
-        if ($event['date'] <= $item['dt_txt']) {
-            $weathers = $this->action($region);
+        if (!empty($weather)) {
+            $update_at = date_parse_from_format("Y-m-d H:i:s", (string) $weather['updated_at']);
 
-            foreach ($weathers['list'] as $item) {
-                if ($weather['updated_at'] > date('d')) {
-                    $weather = Weather::updateOrCreate(
-                        [
-                            'event_id' => $event['id'],
-                            'region_id' => $region['id']
-                        ],
-                        [
-                            'temp' => $item['main']['temp'],
-                            'weather' => $item['weather'][0]['description'],
-                            'date' => $item['dt_txt']
-                        ]
-                    );
+            if ($update_at['day'] < date('d')) {
+                $weatherData = $this->action($event, $region);
 
-                    break;
-                }
+                $event->weather()->update($weatherData);
+
+                return $event->weather()->first();
             }
+
+            return $weather;
         }
 
+        $weatherData = $this->action($event, $region);
 
-
-
+        $weather = $event->weather()->create($weatherData);
 
         return $weather;
     }
 
-    private function action(Region $region)
+    private function action(Event $event, Region $region)
     {
         $link = "https://api.openweathermap.org/data/2.5/forecast?q={$region['title']}&appid=" . Config::get('app.openweathermap');
 
         $weather = file_get_contents($link);
+        $weatherArr = json_decode($weather, true);
 
-        return json_decode($weather, true);
-    }
+        foreach ($weatherArr['list'] as $item) {
+            if ($event['date'] <= $item['dt_txt']) {
+                $weatherData = [
+                    'temp' => $item['main']['temp'],
+                    'weather' => $item['weather'][0]['description'],
+                    'date' => $item['dt_txt']
+                ];
 
-    private function actualWeather ()
-    {
+                return $weatherData;
+            }
+        }
 
+        return null;
     }
 }

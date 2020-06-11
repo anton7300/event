@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWeathersTable extends Migration
+class CreateWeatherTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class CreateWeathersTable extends Migration
      */
     public function up()
     {
-        Schema::create('weathers', function (Blueprint $table) {
+        Schema::create('weather', function (Blueprint $table) {
             $table->id();
 
             $table->bigInteger('event_id')->unsigned();
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
-
-            $table->bigInteger('region_id')->unsigned();
-            $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade');
 
             $table->string('temp');
             $table->string('weather');
@@ -36,6 +33,6 @@ class CreateWeathersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('weathers');
+        Schema::dropIfExists('weather');
     }
 }
