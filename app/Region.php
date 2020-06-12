@@ -10,9 +10,9 @@ class Region extends Model
         'title'
     ];
 
-    public function event ()
+    public function events ()
     {
-        return $this->belongsTo(Event::class);
+        return $this->hasMany(Event::class);
     }
 
     public function country ()

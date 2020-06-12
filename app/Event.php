@@ -40,7 +40,7 @@ class Event extends Model
 
     public function region ()
     {
-        return $this->hasOne(Region::class);
+        return $this->belongsTo(Region::class);
     }
 
     public function weather ()
