@@ -8,6 +8,7 @@ use App\Interest;
 use App\InterestCat;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\WeatherController;
+use App\Http\Controllers\TagController;
 use Illuminate\Http\Request;
 
 class EventApi
@@ -109,7 +110,8 @@ class EventApi
             'gender' => ['nullable', 'integer', 'between:1,2'],
             'count_users' => ['nullable', 'integer', 'min:1'],
             'interest_id' => ['nullable', 'integer', 'exists:interests,id'],
-            'type' => ['required', 'integer', 'between:1,2']
+            'type' => ['required', 'integer', 'between:1,2'],
+            'tags' => ['nullable', 'array']
         ]);
 
         $data = $request->all();
@@ -130,8 +132,9 @@ class EventApi
 
         $event = Event::create($data);
 
-        $region = (new RegionController())->get($data['country'], $data['region']);
-        $event->region()->associate($region)->save();
+        (new RegionController())->set($event, $data['country'], $data['region']);
+
+        (new TagController())->set($event, $data['tags']);
 
         return redirect()->route('user.my-event');
     }
@@ -205,10 +208,13 @@ class EventApi
         $interestCats = InterestCat::get(['id', 'name']);
         $interests = Interest::get(['id', 'name', 'cat_id']);
 
+        $tags = $event->tags()->get();
+
         return [
             'event' => $event,
             'interests' => $interests,
-            'interestCats' => $interestCats
+            'interestCats' => $interestCats,
+            'tags' => $tags
         ];
     }
 
@@ -236,7 +242,8 @@ class EventApi
             'count_users' => ['nullable', 'integer', 'min:1'],
             'interest_id' => ['nullable', 'integer', 'exists:interests,id'],
             'type' => ['required', 'integer', 'between:1,2'],
-            'is_active' => ['required', 'integer', 'between:0,1']
+            'is_active' => ['required', 'integer', 'between:0,1'],
+            'tags' => ['nullable', 'array']
         ]);
 
         $data = $request->all();
@@ -249,10 +256,11 @@ class EventApi
         $data['age_from'] = date("Y-m-d", strtotime("-{$data['age_from']} years"));
         $data['age_to'] = date("Y-m-d", strtotime("-{$data['age_to']} years"));
 
-        $event->update($data);
+        $event = $event->update($data);
 
-        $region = (new RegionController())->get($data['country'], $data['region']);
-        $event->region()->associate($region)->save();
+        (new RegionController())->set($event, $data['country'], $data['region']);
+
+        (new TagController())->set($event, $data['tags']);
 
         return redirect()->route('user.my-event');
     }

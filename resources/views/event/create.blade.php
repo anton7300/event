@@ -97,6 +97,13 @@
                     {{ $message }}
                     @enderror
 
+                    <input name="tags[]" value="" placeholder="tag 1">
+                    <input name="tags[]" value="" placeholder="tag 2">
+                    <input name="tags[]" value="" placeholder="tag 3">
+                    @error('tags')
+                    {{ $message }}
+                    @enderror
+
                     <button type="submit">create</button>
                 </form>
             </div>

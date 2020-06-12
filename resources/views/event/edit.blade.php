@@ -105,6 +105,13 @@
                 {{ $message }}
                 @enderror
 
+                @foreach($event->tags as $tag)
+                    <input name="tags[]" value="{{ $tag['name'] }}" placeholder="tag">
+                @endforeach
+                @error('tags')
+                {{ $message }}
+                @enderror
+
                 <button type="submit">edit</button>
             </form>
         </div>

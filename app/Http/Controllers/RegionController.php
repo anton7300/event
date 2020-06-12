@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Country;
+use App\Event;
 
 class RegionController extends Controller
 {
-    public function get ($countryIso, $regionName)
+    public function set (Event $event, string $countryIso, string $regionName)
     {
         $countryId = Country::whereIso($countryIso)->select('id')->first();
 
@@ -16,6 +16,8 @@ class RegionController extends Controller
             ['country_id' => $countryId['id']]
         );
 
-        return $region;
+        $event->region()->associate($region)->save();
+
+        return true;
     }
 }

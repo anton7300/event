@@ -32,9 +32,13 @@ class WeatherController extends Controller
 
         $weatherData = $this->action($event, $region);
 
-        $weather = $event->weather()->create($weatherData);
+        if ($weatherData) {
+            $weather = $event->weather()->create($weatherData);
 
-        return $weather;
+            return $weather;
+        }
+
+        return null;
     }
 
     private function action(Event $event, Region $region)
