@@ -134,6 +134,8 @@ return [
     |
     */
 
+    'openweathermap' => env('OPENWEATHERMAP_KEY', false),
+
     'providers' => [
 
         /*

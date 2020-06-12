@@ -6,6 +6,8 @@ use App\Event;
 use App\Chat;
 use App\Interest;
 use App\InterestCat;
+use App\Http\Controllers\RegionController;
+use App\Http\Controllers\WeatherController;
 use Illuminate\Http\Request;
 
 class EventApi
@@ -95,9 +97,12 @@ class EventApi
     {
         $request->validate([
             'name' => ['required', 'string'],
+            'country' => ['required', 'string'],
+            'region' => ['required', 'string'],
             'date' => ['required', 'date_format:d.m.Y H:i', 'after_or_equal:today'],
             'location' => ['required', 'string'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png'],
+            'description_short' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'age_from' => ['nullable', 'integer', 'between:1,120', 'lte:age_to'],
             'age_to' => ['nullable', 'integer', 'between:1,120', 'gte:age_from'],
@@ -123,7 +128,10 @@ class EventApi
             );
         }
 
-        Event::create($data);
+        $event = Event::create($data);
+
+        $region = (new RegionController())->get($data['country'], $data['region']);
+        $event->region()->associate($region)->save();
 
         return redirect()->route('user.my-event');
     }
@@ -146,7 +154,11 @@ class EventApi
             $query->where('user_subscriber_id', $userAuth);
         }])->first();
 
-        $tags = $event->tags();
+        $weather = (new WeatherController())->get($event);
+
+        $region = $event->region()->first();
+
+        $tags = $event->tags()->get();
 
         $return = [
             'user' => auth()->user()->profile(),
@@ -154,7 +166,9 @@ class EventApi
             'creator' => $creator,
             'likes' => $likes,
             'eventSubscribers' => $eventSubscribers,
-            'tags' => $tags
+            'tags' => $tags,
+            'weather' => $weather,
+            'region' => $region
         ];
 
         if ($userAuth) {
@@ -209,9 +223,12 @@ class EventApi
     {
         $request->validate([
             'name' => ['required', 'string'],
+            'country' => ['required', 'string'],
+            'region' => ['required', 'string'],
             'date' => ['required', 'date_format:d.m.Y H:i', 'after_or_equal:today'],
             'location' => ['required', 'string'],
             'logo' => ['nullable', 'image', 'mimes:jpeg,png'],
+            'description_short' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
             'age_from' => ['nullable', 'integer', 'between:1,120', 'lte:age_to'],
             'age_to' => ['nullable', 'integer', 'between:1,120', 'gte:age_from'],
@@ -233,6 +250,9 @@ class EventApi
         $data['age_to'] = date("Y-m-d", strtotime("-{$data['age_to']} years"));
 
         $event->update($data);
+
+        $region = (new RegionController())->get($data['country'], $data['region']);
+        $event->region()->associate($region)->save();
 
         return redirect()->route('user.my-event');
     }
