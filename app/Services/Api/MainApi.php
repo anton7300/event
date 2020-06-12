@@ -7,7 +7,7 @@ use App\Event;
 use App\Interest;
 use App\InterestCat;
 
-class Main
+class MainApi
 {
     public function index()
     {
@@ -27,7 +27,7 @@ class Main
             ->limit(3)
             ->get();
 
-        if (auth()->check())
+        if (auth()->check()) {
             $eventsSubscribe = Event::whereIn('created_by', auth()->user()->subscriptions()->get())
                 ->with('creator')
                 ->with(['likes' => function ($query) use ($authUser) {
@@ -39,8 +39,9 @@ class Main
                 }])
                 ->withCount('subscribers')
                 ->get();
-        else
-            $eventsSubscribe = null;
+
+            $user = auth()->user()->profile();
+        }
 
         $interestCats = InterestCat::get(['id', 'name']);
 
@@ -49,9 +50,10 @@ class Main
         return [
             'banners' => $banners,
             'eventsPopular' => $eventsPopular,
-            'eventsSubscribe' => $eventsSubscribe,
+            'eventsSubscribe' => $eventsSubscribe ?? null,
             'interests' => $interests,
-            'interestCats' => $interestCats
+            'interestCats' => $interestCats,
+            'user' => $user ?? null
         ];
     }
 }

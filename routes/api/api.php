@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', 'OauthController@login')->name('login');
 
 Route::group(['namespace' => '\App\Services\Api'], function () {
-    Route::get('main', 'Main@index')->name('main');
+    Route::get('main', 'MainApi@index')->name('main');
     Route::get('help', 'Help@index')->name('help');
 
     Route::get('event', 'EventApi@index')->name('event.index');
