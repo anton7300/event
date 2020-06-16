@@ -47,4 +47,9 @@ class Event extends Model
     {
         return $this->hasOne(Weather::class);
     }
+
+    public function tickets ()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 }

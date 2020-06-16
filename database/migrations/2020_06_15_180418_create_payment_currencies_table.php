@@ -15,7 +15,6 @@ class CreatePaymentCurrenciesTable extends Migration
     {
         Schema::create('payment_currencies', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
             $table->string('code');
             $table->integer('position');
             $table->timestamps();

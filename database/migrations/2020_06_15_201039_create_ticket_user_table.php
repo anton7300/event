@@ -27,10 +27,10 @@ class CreateTicketUserTable extends Migration
 
             $table->integer('place');
             $table->string('amount');
-            $table->string('payment_token');
+            $table->string('payment_token')->nullable();
             $table->tinyInteger('is_payment');
-            $table->string('code');
-            $table->timestamp('reserved_at');
+            $table->string('code')->nullable();
+            $table->timestamp('reserved_at')->nullable();
             $table->timestamps();
         });
     }

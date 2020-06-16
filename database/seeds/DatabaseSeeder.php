@@ -16,7 +16,10 @@ class DatabaseSeeder extends Seeder
             RegionSeeder::class,
             UserSeeder::class,
             InterestSeeder::class,
-            EventSeeder::class
+            EventSeeder::class,
+            PaymentSystemSeeder::class,
+            TicketSeeder::class,
+            PaymentSeeder::class
         ]);
     }
 }

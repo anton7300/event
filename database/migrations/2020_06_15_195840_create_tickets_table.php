@@ -23,11 +23,11 @@ class CreateTicketsTable extends Migration
             $table->foreign('currency_id')->references('id')->on('payment_currencies')->onDelete('cascade');
 
             $table->string('title');
-            $table->integer('count');
-            $table->string('price');
-            $table->string('discount');
+            $table->integer('count')->nullable();
+            $table->string('price')->default(0);
+            $table->string('discount')->nullable();
             $table->tinyInteger('is_place');
-            $table->string('place_img');
+            $table->string('place_img')->nullable();
             $table->timestamps();
         });
     }
