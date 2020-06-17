@@ -5,23 +5,23 @@ namespace App\Services\Api;
 use App\Banner;
 use App\Event;
 use App\Interest;
-use App\InterestCat;
+use App\InterestCat as InterestCategory;
 
 class MainApi
 {
     public function index()
     {
-        $authUser = auth()->check() ? auth()->user()->id : null;
+        $authUserId = auth()->check() ? auth()->user()->id : null;
 
         $banners = Banner::get();
 
         $eventsPopular = Event::with('creator')
-            ->with(['likes' => function ($query) use ($authUser) {
-                $query->where('user_id', $authUser);
+            ->with(['likes' => function ($query) use ($authUserId) {
+                $query->where('user_id', $authUserId);
             }])
             ->withCount('likes')
-            ->with(['subscribers' => function ($query) use ($authUser) {
-                $query->where('user_id', $authUser);
+            ->with(['subscribers' => function ($query) use ($authUserId) {
+                $query->where('user_id', $authUserId);
             }])
             ->withCount('subscribers')
             ->limit(3)
@@ -30,12 +30,12 @@ class MainApi
         if (auth()->check()) {
             $eventsSubscribe = Event::whereIn('created_by', auth()->user()->subscriptions()->get())
                 ->with('creator')
-                ->with(['likes' => function ($query) use ($authUser) {
-                    $query->where('user_id', $authUser);
+                ->with(['likes' => function ($query) use ($authUserId) {
+                    $query->where('user_id', $authUserId);
                 }])
                 ->withCount('likes')
-                ->with(['subscribers' => function ($query) use ($authUser) {
-                    $query->where('user_id', $authUser);
+                ->with(['subscribers' => function ($query) use ($authUserId) {
+                    $query->where('user_id', $authUserId);
                 }])
                 ->withCount('subscribers')
                 ->get();
@@ -43,7 +43,7 @@ class MainApi
             $user = auth()->user()->profile();
         }
 
-        $interestCats = InterestCat::get(['id', 'name']);
+        $interestCategories = InterestCategory::get(['id', 'name']);
 
         $interests = Interest::get(['id', 'name', 'cat_id']);
 
@@ -52,7 +52,7 @@ class MainApi
             'eventsPopular' => $eventsPopular,
             'eventsSubscribe' => $eventsSubscribe ?? null,
             'interests' => $interests,
-            'interestCats' => $interestCats,
+            'interestCats' => $interestCategories,
             'user' => $user ?? null
         ];
     }
