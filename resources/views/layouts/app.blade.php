@@ -4,7 +4,9 @@
 
     <body>
         <div id='app'>
-            @include('layouts.header')
+            <div class="main_page_first_block">
+                @include('layouts.header')
+            </div>
 
             <article>
                 @yield('content')
