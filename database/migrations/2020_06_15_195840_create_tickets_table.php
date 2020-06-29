@@ -20,7 +20,7 @@ class CreateTicketsTable extends Migration
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
 
             $table->bigInteger('currency_id')->unsigned();
-            $table->foreign('currency_id')->references('id')->on('payment_currencies')->onDelete('cascade');
+            $table->foreign('currency_id')->references('id')->on('payment_currencies')->onDelete('set null');
 
             $table->string('title');
             $table->integer('count')->nullable();

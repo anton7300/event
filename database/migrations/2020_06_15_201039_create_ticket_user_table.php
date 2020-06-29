@@ -23,7 +23,10 @@ class CreateTicketUserTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->bigInteger('currency_id')->unsigned();
-            $table->foreign('currency_id')->references('id')->on('payment_currencies')->onDelete('cascade');
+            $table->foreign('currency_id')->references('id')->on('payment_currencies')->onDelete('set null');
+
+            $table->bigInteger('section_id')->unsigned()->nullable();
+            $table->foreign('section_id')->references('id')->on('ticket_sections')->onDelete('set null');
 
             $table->integer('place');
             $table->string('amount');
