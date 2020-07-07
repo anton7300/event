@@ -66,6 +66,43 @@
 
                 @auth
                     <div class="block">
+                        <form method="POST" action="{{ route('ticket.buy') }}">
+                            @csrf
+
+                            @if(count($tickets) > 1)
+                                <select name="ticket">
+                                    @foreach($tickets as $ticket)
+                                        <option value="{{ $ticket->id }}">{{ $ticket->title }}</option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <input name="ticket" hidden value="{{ $tickets[0]->id }}">
+                            @endif
+
+                            <select name="currency">
+                                @foreach($currencies as $currency)
+                                    <option value="{{ $currency->id }}">{{ $currency->code }}</option>
+                                @endforeach
+                            </select>
+
+                            @if(count($places) > 1)
+                                <select name="place">
+                                    @foreach($places as $place)
+                                        <option value="{{ $place }}">{{ $place }}</option>
+                                    @endforeach
+                                </select>
+                            @else
+                                <input name="place" hidden value="{{ $places[0] }}">
+                                {{ $places[0] }}
+                            @endif
+
+                            <button type="submit">buy</button>
+                        </form>
+                    </div>
+                @endauth
+
+                @auth
+                    <div class="block">
                         @include('parts.chat')
                     </div>
                 @endauth

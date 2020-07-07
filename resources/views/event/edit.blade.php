@@ -69,11 +69,6 @@
                 {{ $message }}
                 @enderror
 
-                <input name="count_users" value="{{ $event->count_users }}" placeholder="count_users">
-                @error('count_users')
-                {{ $message }}
-                @enderror
-
                 <select name="interest_id" value="{{ $event->interest_id }}">
                     <option @if (empty($event->interest_id)) selected @endif value="">{{ __('Select') }}</option>
                     @foreach ($interestCats as $itemCat)

@@ -28,7 +28,6 @@ class EventSeeder extends Seeder
                 'age_from' => '1990-01-01',
                 'age_to' => '2000-01-01',
                 'gender' => 1,
-                'count_users' => 10,
                 'price' => 10,
                 'interest_id' => 'Tennis',
                 'type' => 1,

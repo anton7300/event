@@ -34,7 +34,6 @@ class CreateEventsTable extends Migration
             $table->date('age_from')->nullable();
             $table->date('age_to')->nullable();
             $table->tinyInteger('gender')->nullable();
-            $table->integer('count_users')->nullable();
             $table->string('price')->nullable();
             $table->tinyInteger('type');
             $table->integer('views')->default(0);

@@ -13,7 +13,7 @@ class CreateWeatherTable extends Migration
      */
     public function up()
     {
-        Schema::create('weather', function (Blueprint $table) {
+        Schema::create('weathers', function (Blueprint $table) {
             $table->id();
 
             $table->bigInteger('event_id')->unsigned();
@@ -33,6 +33,6 @@ class CreateWeatherTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('weather');
+        Schema::dropIfExists('weathers');
     }
 }

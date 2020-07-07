@@ -69,11 +69,6 @@
                     {{ $message }}
                     @enderror
 
-                    <input name="count_users" value="{{ old('count_users') }}" placeholder="count_users">
-                    @error('count_users')
-                    {{ $message }}
-                    @enderror
-
                     <select name="interest_id" value="{{ old('interest_id') }}">
                         <option @if (empty(old('interest_id'))) selected @endif value="">{{ __('Select') }}</option>
                         @foreach ($interestCats as $itemCat)
@@ -103,6 +98,21 @@
                     @error('tags')
                     {{ $message }}
                     @enderror
+
+                    <br><br>
+                    ticket
+                    <br>
+                    <input name="title" value="" placeholder="Ticket title">
+                    <input name="count" value="" placeholder="Place count">
+                    <input name="price" value="" placeholder="Ticket price">
+                    <select name="currency">
+                        @foreach($currencies as $currency)
+                            <option value="{{ $currency->id }}">{{ $currency->code }}</option>
+                        @endforeach
+                    </select>
+                    <input name="discount" value="" placeholder="Ticket discount">
+                    is place <input name="is_place" type="checkbox" value="1">
+                    <br><br>
 
                     <button type="submit">create</button>
                 </form>

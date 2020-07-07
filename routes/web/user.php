@@ -10,6 +10,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('/event/{event}', 'EventController@destroy')->name('event.destroy');
     Route::post('/event/{event}/like', 'EventLikeController@edit')->name('event.like');
     Route::post('/event/{event}/subscribe', 'EventController@subscribe')->name('event.subscribe');
+    Route::post('/ticket/buy', 'TicketController@buy')->name('ticket.buy');
+    Route::post('/event/{event}/ticket/create', 'TicketController@create')->name('ticket.create');
 
     Route::get('/my-event', 'UserController@myEvent')->name('user.my-event');
     Route::get('/my-participate', 'UserController@myParticipate')->name('user.my-participate');

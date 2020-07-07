@@ -19,14 +19,14 @@ class CreateTicketsTable extends Migration
             $table->bigInteger('event_id')->unsigned();
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
 
-            $table->bigInteger('currency_id')->unsigned();
-            $table->foreign('currency_id')->references('id')->on('payment_currencies')->onDelete('set null');
+            $table->bigInteger('currency_id')->unsigned()->nullable();
+            $table->foreign('currency_id')->references('id')->on('payment_currencies')->onDelete('cascade');
 
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->integer('count')->nullable();
-            $table->string('price')->default(0);
+            $table->string('price')->nullable();
             $table->string('discount')->nullable();
-            $table->tinyInteger('is_place');
+            $table->tinyInteger('is_place')->nullable();
             $table->string('place_img')->nullable();
             $table->timestamps();
         });

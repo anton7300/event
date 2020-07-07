@@ -4,11 +4,15 @@ namespace App\Services\Api;
 
 use App\Event;
 use App\Chat;
+use App\Ticket;
 use App\Interest;
 use App\InterestCat;
+use App\PaymentCurrency;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\WeatherController;
 use App\Http\Controllers\TagController;
+use App\TicketUser;
+use App\Http\Controllers\TicketController;
 use Illuminate\Http\Request;
 
 class EventApi
@@ -84,7 +88,8 @@ class EventApi
 
         return [
             'interests' => $interests,
-            'interestCats' => $interestCats
+            'interestCats' => $interestCats,
+            'currencies' => PaymentCurrency::all()
         ];
     }
 
@@ -132,6 +137,19 @@ class EventApi
 
         $event = Event::create($data);
 
+        (new TicketController)->create(
+            $event,
+            [
+                'title' => NULL,
+                'currency_id' => NULL,
+                'count' => NULL,
+                'price' => NULL,
+                'discount' => NULL,
+                'is_place' => NULL,
+                'place_img' => NULL
+            ]
+        );
+
         (new RegionController())->set($event, $data['country'], $data['region']);
 
         (new TagController())->set($event, $data['tags']);
@@ -164,7 +182,6 @@ class EventApi
         $tags = $event->tags()->get();
 
         $return = [
-            'user' => auth()->user()->profile(),
             'event' => $event,
             'creator' => $creator,
             'likes' => $likes,
@@ -183,9 +200,13 @@ class EventApi
                 ['event_id' => $event->id]
             );
 
+            $return['user'] = auth()->user()->profile();
             $return['like'] = $like;
             $return['eventSubscriber'] = $eventSubscriber;
             $return['chat'] = $chat;
+            $return['tickets'] = $event->tickets()->get();
+            $return['currencies'] = PaymentCurrency::all();
+            $return['places'] = (new TicketController())->getFreePlaces($return['tickets'][0]);
         }
 
         return $return;

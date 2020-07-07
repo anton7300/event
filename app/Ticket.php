@@ -14,4 +14,9 @@ class Ticket extends Model
     {
         return $this->belongsTo(Event::class);
     }
+
+    public function sections ()
+    {
+        return $this->belongsToMany(TicketSection::class, 'section_ticket', 'ticket_id', 'section_id');
+    }
 }
